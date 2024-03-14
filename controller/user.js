@@ -42,13 +42,13 @@ const loginApi =  (req, res) => {
             }
             else {
               console.log('로그인 실패(비밀번호 불일치)');
-              return res.status(200).json({message: 'fail1'});
+              return res.status(401).json({message: 'fail1'});
             }
           })
         }
         else {
           console.log('해당하는 id를 찾을 수 없습니다.');
-          return res.status(200).json({message: 'fail2'});
+          return res.status(401).json({message: 'fail2'});
         }
       })
 };
