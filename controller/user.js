@@ -54,8 +54,9 @@ const loginApi =  (req, res) => {
 };
 
 const hiApi = (req, res) => {
+  console.log(req.headers);
   const data = {
-      message : "hi sungwon"
+      message : `hi ${req.headers.username}`
   };
   res.json(data);
 };
