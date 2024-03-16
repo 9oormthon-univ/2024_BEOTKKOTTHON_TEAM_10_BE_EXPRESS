@@ -26,25 +26,27 @@ function verifyToken(req, res, next) {
   // 쿠키에서 토큰 추출
   // const token = req.cookies['accessToken']; // 'token_name'에는 실제 토큰이 저장된 쿠키 이름을 입력하세요
 
-  const token = req.headers.accesstoken;
+  // const token = req.headers.accesstoken;
 
 
-  if (!token) {
-    return res.status(403).json({ message:'NoToken'});
-  } else {
+  // if (!token) {
+  //   return res.status(403).json({ message:'NoToken'});
+  // } else {
 
-    // 토큰 검증
-    jwt.verify(token, process.env.SECRETKEY, (err, decoded) => {
-      if (err) {
-        res.clearCookie('accessToken', { path: '/', expires: new Date(0) });
-        return res.status(401).json({ message: 'TokenFail' });
-      } else {
-        console.log(decoded.username);
-        req.headers.username = decoded.username;
-        next();
-      }
-    });
-  }
+  //   // 토큰 검증
+  //   jwt.verify(token, process.env.SECRETKEY, (err, decoded) => {
+  //     if (err) {
+  //       res.clearCookie('accessToken', { path: '/', expires: new Date(0) });
+  //       return res.status(401).json({ message: 'TokenFail' });
+  //     } else {
+  //       console.log(decoded.username);
+  //       req.headers.username = decoded.username;
+  //       next();
+  //     }
+  //   });
+  // }
+  req.headers.username = "jjang";
+  next();
 
     // 요청에서 추출된 정보 활용 (예: 유저 아이디)
     
