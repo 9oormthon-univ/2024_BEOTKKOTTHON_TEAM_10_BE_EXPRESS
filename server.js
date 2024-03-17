@@ -15,8 +15,9 @@ const userController = require('./controller/user');
 const proxyController = require('./proxy/proxy');
 
 // app.get('/hi',userController.hiApi);
-app.get('/login', userController.loginApi);
-app.get('/signup', userController.signupApi);
+app.post('/user/login', userController.loginApi);
+app.post('/user/signup', userController.signupApi);
+app.post('/user/onboard', userController.onboardApi);
 
 // -------------------Proxy------------------------------//
 app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시

@@ -6,9 +6,9 @@ const app = require("../server");
 const loginApi =  (req, res) => {
   const response_password = req.body.password;
 
-  models.Reuser.findOne({
+  models.User.findOne({
       where: {
-        username: req.body.username
+        userid: req.body.userid
       }
     })
       .then(foundData => {
@@ -16,24 +16,24 @@ const loginApi =  (req, res) => {
           bcrypt.compare(response_password, foundData.password, function (err, result) {
             if (err) throw err;
             if (result) {
-              console.log('login 성공');
               // req.session.user = result;
               // req.session.stdid = req.body.id;
               try {
                 const accessToken = jwt.sign({
-                  id: foundData.id,
-                  username: foundData.username,
+                  name: foundData.name,
+                  userid: foundData.userid,
                 }, "accesstoken", {
-                  expiresIn: '1h',
+                  expiresIn: '7d',
                   issuer: "About Tech",
                 });
 
-                res.cookie("accessToken", accessToken, {
-                  secure: false,
-                  httpOnly: true,
-                });
+                // res.cookie("accessToken", accessToken, {
+                //   secure: false,
+                //   httpOnly: true,
+                // });
               //   res.setHeader('Authorization', 'Bearer ' + accessToken);
-                return res.status(200).json({message: 'success'});
+                
+                return res.status(200).json({message: 'success', accesstoken: accessToken});
               } catch (error) {
                   console.log(error);
                 return res.status(404).send(error);
@@ -78,18 +78,20 @@ const signupApi = (req, res) => {
                   const password = req.body.password;
                   const saltRounds = 10;
                   bcrypt.hash(password, saltRounds, function (err, hashed_password) {
-                      models.Reuser.create({
-                          username: req.body.username,
-                          password: hashed_password
+                      models.User.create({
+                          userid: req.body.userid,
+                          password: hashed_password,
+                          name: req.body.name,
+                          onboard: false
                       })
                           .then(user => {
                               // 유저 생성이 성공하면 success 메시지를 응답으로 보냄
-                              res.json({ message: "success" });
+                              return res.json({ message: "success" });
                           })
                           .catch(error => {
                               // 유저 생성 중 오류가 발생하면 fail 메시지를 응답으로 보냄
                               console.error(error);
-                              res.json({ message: "fail1" });
+                              return res.status(400).json({ message: "fail" });
                           });
                   })
               } catch (error) {
@@ -101,8 +103,37 @@ const signupApi = (req, res) => {
       })
 };
 
+const onboardApi = (req, res) => {
+  models.User.findOne({
+    where: {
+      userid: req.headers.userid
+    }
+  })
+  .then(foundData => {
+    if(foundData){
+      foundData.update({
+        ranking: req.body.ranking,
+        grade: req.body.grade,
+        region_city_province: req.body.region_city_province,
+        region_city_country_district: req.body.region_city_country_district,
+        major: req.body.major,
+        onboard: true
+      })
+      .then(updatedData => {
+        return res.status(200).json({message : "success"});
+      })
+      .catch(error => {
+        return res.status(404).json({message: "fail2"}); //온보딩 실패
+      })
+    } else{
+      return res.status(400).json({message : "fail1"}); //유저 없음
+    }
+  })
+}
+
 module.exports = {
   loginApi,
   hiApi,
-  signupApi
+  signupApi,
+  onboardApi
 }
