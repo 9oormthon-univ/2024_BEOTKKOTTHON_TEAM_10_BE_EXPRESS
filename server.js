@@ -14,15 +14,15 @@ app.use(cookieParser());
 const userController = require('./controller/user');
 const proxyController = require('./proxy/proxy');
 
-app.get('/test',userController.testApi);
+// app.get('/test',userController.testApi);
 app.post('/user/login', userController.loginApi);
 app.post('/user/signup', userController.signupApi);
-app.post('/user/onboard', userController.onboardApi);
-app.get('/user/onboard/check', userController.checkOnboardApi);
-app.get('/user/login/check', userController.checkLoginApi);
+app.post('/user/onboard',proxyController.verifyToken, userController.onboardApi);
+app.get('/user/onboard/check',proxyController.verifyToken, userController.checkOnboardApi);
+app.get('/user/login/check',proxyController.verifyToken, userController.checkLoginApi);
 
 // -------------------Proxy------------------------------//
-app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
+app.use('/test', proxyController.verifyToken, proxyController.proxy('/test')); //proxy 예시
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
