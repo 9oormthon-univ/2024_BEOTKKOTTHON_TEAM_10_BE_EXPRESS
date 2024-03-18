@@ -145,9 +145,14 @@ const checkOnboardApi = (req, res) => {
         return res.json({ message: "false" }); //온보딩 판별
       }
     } else {
-      return res.json({ message: "fail" }); //해당하는 User 없음
+      return res.status(400).json({ message: "fail" }); //해당하는 User 없음
     }
   })
+}
+
+
+const checkLoginApi = (req, res) => {
+  return res.json({message:"login"});
 }
 
 module.exports = {
@@ -155,5 +160,6 @@ module.exports = {
   testApi,
   signupApi,
   onboardApi,
-  checkOnboardApi
+  checkOnboardApi,
+  checkLoginApi
 }

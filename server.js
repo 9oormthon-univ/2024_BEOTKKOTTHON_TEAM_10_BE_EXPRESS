@@ -19,6 +19,7 @@ app.post('/user/login', userController.loginApi);
 app.post('/user/signup', userController.signupApi);
 app.post('/user/onboard', userController.onboardApi);
 app.get('/user/onboard/check', userController.checkOnboardApi);
+app.get('/user/login/check', userController.checkLoginApi);
 
 // -------------------Proxy------------------------------//
 app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
