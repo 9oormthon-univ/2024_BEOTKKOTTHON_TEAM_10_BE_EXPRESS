@@ -53,11 +53,11 @@ const loginApi =  (req, res) => {
       })
 };
 
-const hiApi = (req, res) => {
+const testApi = (req, res) => {
   // console.log(req.headers);
   const data = {
-      message : `hi ${req.headers.username}`
-      // message : `hi jjang`
+      // message : `hi ${req.headers.username}`
+      message : `hi jjang`
   };
   res.json(data);
 };
@@ -133,7 +133,7 @@ const onboardApi = (req, res) => {
 
 module.exports = {
   loginApi,
-  hiApi,
+  testApi,
   signupApi,
   onboardApi
 }

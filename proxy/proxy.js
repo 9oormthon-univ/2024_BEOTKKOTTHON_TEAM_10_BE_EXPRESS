@@ -23,16 +23,14 @@ function proxy(endPoint) {
 }
 
 function verifyToken(req, res, next) {
-  // 쿠키에서 토큰 추출
   // const token = req.cookies['accessToken']; // 'token_name'에는 실제 토큰이 저장된 쿠키 이름을 입력하세요
 
-  // const token = req.headers.accesstoken;
+  // const token = req.body.accesstoken;
 
 
   // if (!token) {
   //   return res.status(403).json({ message:'NoToken'});
   // } else {
-
   //   // 토큰 검증
   //   jwt.verify(token, process.env.SECRETKEY, (err, decoded) => {
   //     if (err) {

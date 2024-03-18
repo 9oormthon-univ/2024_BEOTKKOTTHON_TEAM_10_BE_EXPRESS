@@ -14,7 +14,7 @@ app.use(cookieParser());
 const userController = require('./controller/user');
 const proxyController = require('./proxy/proxy');
 
-// app.get('/hi',userController.hiApi);
+app.get('/test',userController.testApi);
 app.post('/user/login', userController.loginApi);
 app.post('/user/signup', userController.signupApi);
 app.post('/user/onboard', userController.onboardApi);
