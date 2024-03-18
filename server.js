@@ -18,11 +18,12 @@ app.get('/test',userController.testApi);
 app.post('/user/login', userController.loginApi);
 app.post('/user/signup', userController.signupApi);
 app.post('/user/onboard', userController.onboardApi);
+app.get('/user/onboard/check', userController.checkOnboardApi);
 
 // -------------------Proxy------------------------------//
 app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}` );
+    console.log(`Server is running on port ${PORT}`);
 });
 
