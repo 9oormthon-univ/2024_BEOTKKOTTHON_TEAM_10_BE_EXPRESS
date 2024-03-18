@@ -25,7 +25,7 @@ function proxy(endPoint) {
 function verifyToken(req, res, next) {
   // const token = req.cookies['accessToken']; // 'token_name'에는 실제 토큰이 저장된 쿠키 이름을 입력하세요
 
-  const token = req.body.accesstoken;
+  const token = req.headers.accesstoken;
 
 
   // if (!token) {
@@ -49,7 +49,7 @@ function verifyToken(req, res, next) {
       return res.status(401).json({ message: 'TokenFail' });
     } else {
       // console.log(decoded.username);
-      req.headers.username = decoded.username;
+      req.headers.userid = decoded.userid;
       next();
     }
   });

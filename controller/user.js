@@ -57,7 +57,7 @@ const testApi = (req, res) => {
   // console.log(req.headers);
   const data = {
     // message : `hi ${req.headers.username}`
-    message: `hi jjang`
+    message: `hi ${req.headers.username}`
   };
   res.json(data);
 };
