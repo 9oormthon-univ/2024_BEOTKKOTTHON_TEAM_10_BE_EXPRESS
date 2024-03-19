@@ -19,7 +19,8 @@ app.post('/user/login', userController.loginApi);
 app.post('/user/signup', userController.signupApi);
 app.post('/user/onboard',proxyController.verifyToken, userController.onboardApi);
 app.get('/user/onboard/check',proxyController.verifyToken, userController.checkOnboardApi);
-app.get('/user/hashtag');
+app.get('/user/hashtag', proxyController.verifyToken, userController.hashtagApi);
+app.get('/user/login/check', proxyController.verifyToken, userController.checkLoginApi);
 
 
 

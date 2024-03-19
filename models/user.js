@@ -25,8 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     region_city_province: DataTypes.STRING,
     region_city_country_district: DataTypes.STRING,
     major: DataTypes.STRING,
-    onboard: DataTypes.BOOLEAN,
-    total_amount: DataTypes.STRING
+    onboard: DataTypes.BOOLEAN
 
   }, {
     sequelize,

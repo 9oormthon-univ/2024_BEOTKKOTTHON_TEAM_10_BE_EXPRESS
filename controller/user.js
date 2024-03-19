@@ -155,10 +155,38 @@ const checkOnboardApi = (req, res) => {
     })
 }
 
+const checkLoginApi = (req, res) => {
+  return res.json({message: "login"});
+}
+
+const hashtagApi = (req, res) => {
+  models.User.findOne({
+    where: {
+      userid : req.headers.userid
+    }
+  })
+  .then(foundData => {
+    if(foundData){
+      const data = {
+        ranking : foundData.ranking,
+        grade : foundData.grade,
+        region_city_province : foundData.region_city_province,
+        region_city_country_district : foundData.region_city_country_district,
+        major : foundData.major
+      }
+      return res.json(data);
+    } else {
+      return res.json({message : "fail"});
+    }
+  })
+}
+
 module.exports = {
   loginApi,
   testApi,
   signupApi,
   onboardApi,
   checkOnboardApi,
+  checkLoginApi,
+  hashtagApi
 }
