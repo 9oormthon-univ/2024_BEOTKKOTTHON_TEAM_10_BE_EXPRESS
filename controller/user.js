@@ -57,7 +57,7 @@ const testApi = (req, res) => {
   // console.log(req.headers);
   const data = {
     // message : `hi ${req.headers.username}`
-    message: `hi choi`
+    message: `hi jjang`
   };
   res.json(data);
 };
@@ -145,27 +145,7 @@ const checkOnboardApi = (req, res) => {
         return res.json({ message: "false" }); //온보딩 판별
       }
     } else {
-      return res.json({ message: "fail" }); //해당하는 User 없음
-    }
-  })
-}
-
-const onboardHashtagApi = (req, res) => {
-  models.User.findOne({
-    where: {
-      userid : req.headers.userid
-    }
-  })
-  .then(foundData => {
-    if(foundData){
-      const data = {
-        ranking: foundData.ranking,
-        grade: foundData.grade,
-        major : foundData.major,
-        region_city_province: foundData.region_city_province,
-        region_city_country_district: foundData.region_city_country_district
-      }
-      return res.json(data);
+      return res.status(400).json({ message: "fail" }); //해당하는 User 없음
     }
   })
 }
@@ -175,5 +155,6 @@ module.exports = {
   testApi,
   signupApi,
   onboardApi,
-  checkOnboardApi
+  checkOnboardApi,
+  checkLoginApi
 }
