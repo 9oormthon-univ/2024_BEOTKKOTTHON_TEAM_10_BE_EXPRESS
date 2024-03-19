@@ -30,6 +30,7 @@ const loginApi = (req, res) => {
               // res.cookie("accessToken", accessToken, {
               //   secure: false,
               //   httpOnly: true,
+
               // });
               //   res.setHeader('Authorization', 'Bearer ' + accessToken);
 
@@ -111,20 +112,24 @@ const onboardApi = (req, res) => {
   })
     .then(foundData => {
       if (foundData) {
-        foundData.update({
-          ranking: req.body.ranking,
-          grade: req.body.grade,
-          region_city_province: req.body.region_city_province,
-          region_city_country_district: req.body.region_city_country_district,
-          major: req.body.major,
-          onboard: true
-        })
-          .then(updatedData => {
-            return res.status(200).json({ message: "success" });
+        if (foundData.onboard) {
+          return res.status(201).json({ message: "exist" });
+        } else {
+          foundData.update({
+            ranking: req.body.ranking,
+            grade: req.body.grade,
+            region_city_province: req.body.region_city_province,
+            region_city_country_district: req.body.region_city_country_district,
+            major: req.body.major,
+            onboard: true
           })
-          .catch(error => {
-            return res.status(404).json({ message: "fail2" }); //온보딩 실패
-          })
+            .then(updatedData => {
+              return res.status(200).json({ message: "success" });
+            })
+            .catch(error => {
+              return res.status(404).json({ message: "fail2" }); //온보딩 실패
+            })
+        }
       } else {
         return res.status(400).json({ message: "fail1" }); //유저 없음
       }
@@ -137,17 +142,17 @@ const checkOnboardApi = (req, res) => {
       userid: req.headers.userid
     }
   })
-  .then(foundData => {
-    if (foundData) {
-      if (foundData.onboard) {
-        return res.json({ message: "true" }); //온보딩 판별
+    .then(foundData => {
+      if (foundData) {
+        if (foundData.onboard) {
+          return res.json({ message: "true" }); //온보딩 판별
+        } else {
+          return res.json({ message: "false" }); //온보딩 판별
+        }
       } else {
-        return res.json({ message: "false" }); //온보딩 판별
+        return res.status(400).json({ message: "fail" }); //해당하는 User 없음
       }
-    } else {
-      return res.status(400).json({ message: "fail" }); //해당하는 User 없음
-    }
-  })
+    })
 }
 
 module.exports = {
@@ -156,5 +161,4 @@ module.exports = {
   signupApi,
   onboardApi,
   checkOnboardApi,
-  checkLoginApi
 }

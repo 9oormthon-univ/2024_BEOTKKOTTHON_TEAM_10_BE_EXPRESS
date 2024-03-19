@@ -17,8 +17,8 @@ const proxyController = require('./proxy/proxy');
 app.get('/test', userController.testApi);
 app.post('/user/login', userController.loginApi);
 app.post('/user/signup', userController.signupApi);
-app.post('/user/onboard', userController.onboardApi);
-app.get('/user/onboard/check', userController.checkOnboardApi);
+app.post('/user/onboard',proxyController.verifyToken, userController.onboardApi);
+app.get('/user/onboard/check',proxyController.verifyToken, userController.checkOnboardApi);
 app.get('/user/hashtag');
 
 function checkParam(req, res, next) {

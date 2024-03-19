@@ -2,8 +2,8 @@
   "development": {
     "username": "root",
     "password": "!assaassa0319",
-    "database": "cen",
-    "host": "127.0.0.1",
+    "database": "test",
+    "host": "34.64.244.32",
     "dialect": "mysql"
   },
   "test": {
