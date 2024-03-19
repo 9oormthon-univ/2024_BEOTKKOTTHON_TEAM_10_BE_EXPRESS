@@ -57,7 +57,7 @@ const testApi = (req, res) => {
   // console.log(req.headers);
   const data = {
     // message : `hi ${req.headers.username}`
-    message: `hi jjang`
+    message: `hi choi`
   };
   res.json(data);
 };
@@ -146,6 +146,26 @@ const checkOnboardApi = (req, res) => {
       }
     } else {
       return res.json({ message: "fail" }); //해당하는 User 없음
+    }
+  })
+}
+
+const onboardHashtagApi = (req, res) => {
+  models.User.findOne({
+    where: {
+      userid : req.headers.userid
+    }
+  })
+  .then(foundData => {
+    if(foundData){
+      const data = {
+        ranking: foundData.ranking,
+        grade: foundData.grade,
+        major : foundData.major,
+        region_city_province: foundData.region_city_province,
+        region_city_country_district: foundData.region_city_country_district
+      }
+      return res.json(data);
     }
   })
 }
