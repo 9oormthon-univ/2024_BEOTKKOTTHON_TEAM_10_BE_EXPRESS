@@ -37,6 +37,9 @@ module.exports = {
       onboard: {
         type: Sequelize.BOOLEAN
       },
+      total_amount: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -21,15 +21,10 @@ app.post('/user/onboard',proxyController.verifyToken, userController.onboardApi)
 app.get('/user/onboard/check',proxyController.verifyToken, userController.checkOnboardApi);
 app.get('/user/hashtag');
 
-function checkParam(req, res, next) {
-    req.headers.param = req.params.id;
-    next();
-}
 
 
 // -------------------Proxy------------------------------//
 app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
-app.use('/test/:id', proxyController.proxy(`/test/:id`));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
