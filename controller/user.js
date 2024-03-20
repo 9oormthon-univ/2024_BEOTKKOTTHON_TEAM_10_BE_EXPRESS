@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const models = require('../models');
-const app = require("../server");
 
 const loginApi = (req, res) => {
   const response_password = req.body.password;
