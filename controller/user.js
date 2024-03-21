@@ -75,7 +75,7 @@ const changePasswordApi = (req, res) => {
               if (numRows[0] === 1) {
                 return res.json({ message: "success" });
               } else {
-                return res.json({ message: "not updated" });
+                return res.status(400).json({ message: "not updated" });
               }
             })
             .catch(err => {
@@ -84,7 +84,7 @@ const changePasswordApi = (req, res) => {
             });
           })
     } else {
-      return res.json({message: "no user"});
+      return res.status(200).json({message: "no user"});
     }
   })
   .catch(err => {
