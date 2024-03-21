@@ -53,6 +53,48 @@ const loginApi = (req, res) => {
     })
 };
 
+const changePasswordApi = (req, res) => {
+  models.User.findOne({
+    where: {
+      userid: req.body.userid,
+      name: req.body.name
+    }
+  })
+  .then(foundData => {
+    if(foundData){
+      const password = req.body.password;
+          const saltRounds = 10;
+          bcrypt.hash(password, saltRounds, function (err, hashed_password) {
+            models.User.update({password: hashed_password}, {
+              where: {
+                userid : req.body.userid,
+                name : req.body.name
+              }
+            })
+            .then(numRows => {
+              if (numRows[0] === 1) {
+                return res.json({ message: "success" });
+              } else {
+                return res.json({ message: "not updated" });
+              }
+            })
+            .catch(err => {
+              console.error('업데이트 중 오류 발생:', err);
+              return res.status(500).json({ error: "Internal server error" });
+            });
+          })
+    } else {
+      return res.json({message: "no user"});
+    }
+  })
+  .catch(err => {
+    console.error('사용자 검색 중 오류 발생:', err);
+    return res.status(500).json({ error: "Internal server error" });
+  });
+}
+
+
+
 const testApi = (req, res) => {
   // console.log(req.headers);
   const data = {
@@ -187,5 +229,6 @@ module.exports = {
   onboardApi,
   checkOnboardApi,
   checkLoginApi,
-  hashtagApi
+  hashtagApi,
+  changePasswordApi
 }
