@@ -79,10 +79,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
+// app.use((req, res, next) => {
+//     res.status(404).send('Not Found');
+//   });
 
 const userController = require('./controller/user');
 const proxyController = require('./proxy/proxy');
 const scholarshipController = require('./controller/scholarship');
+const calenderController = require('./controller/calendar');
 
 app.get('/test', userController.testApi);
 app.post('/user/login', userController.loginApi);
@@ -98,21 +102,26 @@ app.get('/user/login/check', proxyController.verifyToken, userController.checkLo
 // -------------------------scholarship---------------------------
 app.post('/scholarship/generate', scholarshipController.createScholarshipApi);
 
+// -------------------------calendar--------------------------------
+
+app.get('/calendar/:year/:month', proxyController.verifyToken,calenderController.yearDateCalendarApi);
+app.get('/calendar/:year/:month/:day', proxyController.verifyToken, calenderController.yearDateDayCalendarApi);
+
 
 // -------------------Proxy------------------------------//
 app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
 
-app.use('/scholarship/all', proxyController.proxy('/scholarship/all'));
-app.use('/scholarship/all/new', proxyController.proxy('/scholarship/all/new'));
-app.use('/scholarship/user', proxyController.verifyToken, proxyController.proxy('/scholarship/user'));
-app.use('/scholarship/user/amount', proxyController.verifyToken, proxyController.proxy('/scholarship/user/amount'));
-app.use('/scholarship/each', proxyController.proxy('/scholarship/each'));
-app.use('/scholarship/each/status', proxyController.proxy('/scholarship/each/status'));
-app.use('/scholarship/save', proxyController.verifyToken, proxyController.proxy('/scholarship/save'));
+app.get('/scholarship/all', proxyController.proxy('/scholarship/all'));
+app.get('/scholarship/all/new', proxyController.proxy('/scholarship/all/new'));
+app.get('/scholarship/user', proxyController.verifyToken, proxyController.proxy('/scholarship/user'));
+app.get('/scholarship/user/amount', proxyController.verifyToken, proxyController.proxy('/scholarship/user/amount'));
+app.get('/scholarship/each', proxyController.proxy('/scholarship/each'));
+app.post('/scholarship/each/status', proxyController.proxy('/scholarship/each/status'));
+app.post('/scholarship/each/save', proxyController.verifyToken, proxyController.proxy('/scholarship/each/save'));
 
 
-app.use('/document', proxyController.proxy('/document'));
-app.use('/document/each', proxyController.proxy('/document/each'));
+app.get('/documents', proxyController.proxy('/documents'));
+app.get('/document/each', proxyController.proxy('/document/each'));
 
 app.use('/user/all', proxyController.proxy('/user/all'));
 

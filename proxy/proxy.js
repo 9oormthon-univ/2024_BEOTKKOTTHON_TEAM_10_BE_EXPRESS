@@ -47,7 +47,7 @@ function verifyToken(req, res, next) {
   // const token = req.cookies['accessToken']; // 'token_name'에는 실제 토큰이 저장된 쿠키 이름을 입력하세요
 
   const token = req.headers.accesstoken;
-  console.log(token);
+  // console.log(token);
 
   // if (!token) {
   //   return res.status(403).json({ message:'NoToken'});

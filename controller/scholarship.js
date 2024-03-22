@@ -1,5 +1,6 @@
 const models = require('../models');
 const scholarship = require('../models/scholarship');
+const axios = require('axios');
 
 const createScholarshipApi = (req, res) => {
     const receivedData = req.body;
@@ -41,4 +42,23 @@ const createScholarshipApi = (req, res) => {
         });
 };
 
-module.exports = { createScholarshipApi }
+
+const userAmountApi = async (req, res) => {
+    try {
+        // 다른 서버로의 GET 요청 보내기
+        const response = await axios.get('https://port-0-cen-qxz2elttj25hx.sel5.cloudtype.app/scholarship/user/amount',{
+            headers: {
+                'userid' : req.headers.userid
+            }
+        });
+
+        // 다른 서버에서 받은 데이터를 클라이언트에게 응답으로 전송
+        console.log(response.data);
+    } catch (error) {
+        // 오류 처리
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+module.exports = { createScholarshipApi, userAmountApi }
