@@ -4,6 +4,9 @@ const cookieParser = require('cookie-parser');
 const PORT = 8001;
 const app = express();
 const cors = require('cors');
+const apn = require('apn');
+const cron = require('node-cron');
+const models = require('./models');
 
 
 
@@ -42,9 +45,77 @@ const cors = require('cors');
 // });
 
 
+const apnProvider = new apn.Provider({
+    token: {
+        key: './AuthKey_N7R2AY8J7S.p8', // 인증 키 경로
+        keyId: 'N7R2AY8J7S',
+        teamId: 'Q653PU93R6',
+    },
+    production: false // 개발용인지 아닌지 설정
+});
+
+function sendPushNotification() {
+    models.Scholarship.findAll()
+        .then(findAllData => {
+            if (findAllData) {
+                console.log(findAllData.length);
+                models.Count.findOne({
+                    attributes: ['count']
+                })
+                    .then(findData => {
+                        if (findData) {
+                            if (findAllData.length > findData.count) {
+                                models.Count.update({ count: findAllData.length }, { where: { id: 1 } })
+                                    .then(updateData => {
+                                        if (updateData) {
+                                            models.Userdevice.findAll()
+                                                .then(devices => {
+                                                    devices.forEach(device => {
+                                                        userid = device.userid
+
+                                                        models.User.findOne({
+                                                            where: {
+                                                                userid: userid
+                                                            }
+                                                        })
+                                                            .then(findOneData => {
+                                                                if (findOneData) {
+                                                                    username = findOneData.name;
+                                                                    devicetoken = device.devicetoken;
+
+                                                                    const notification = new apn.Notification({
+                                                                        alert: `${username}님 새로운 공고가 올라왔습니다.`,
+                                                                        sound: 'default',
+                                                                        badge: 1,
+                                                                        topic: 'WEDLE.CenApp'
+                                                                    });
+
+                                                                    apnProvider.send(notification, devicetoken).then(result => {
+                                                                        console.log(result);
+                                                                    }).catch(error => {
+                                                                        console.error('Error sending push notification:', error);
+                                                                    })
+                                                                }
+
+                                                            })
 
 
+                                                    });
+                                                })
+                                        }
 
+                                    })
+
+
+                            }
+                        }
+                    })
+            }
+        })
+}
+
+const interval = 10 * 1000;
+setInterval(sendPushNotification, interval);
 
 
 
@@ -62,7 +133,7 @@ const userController = require('./controller/user');
 const proxyController = require('./proxy/proxy');
 const scholarshipController = require('./controller/scholarship');
 const calenderController = require('./controller/calendar');
-const notificationController = require('./proxy/notification');
+// const notificationController = require('./proxy/notification');
 
 app.get('/test', userController.testApi);
 app.post('/user/login', userController.loginApi);
@@ -81,17 +152,17 @@ app.post('/scholarship/generate', scholarshipController.createScholarshipApi);
 
 // -------------------------calendar--------------------------------
 
-app.get('/calendar/:year/:month', proxyController.verifyToken,calenderController.yearDateCalendarApi);
+app.get('/calendar/:year/:month', proxyController.verifyToken, calenderController.yearDateCalendarApi);
 app.get('/calendar/:year/:month/:day', proxyController.verifyToken, calenderController.yearDateDayCalendarApi);
 app.get('/count/end/:year/:month', proxyController.verifyToken, calenderController.countDayCalendarApi);
 
 
 // -------------------Proxy------------------------------//
-app.use('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
+app.get('/hi', proxyController.verifyToken, proxyController.proxy('/hi')); //proxy 예시
 
 app.get('/scholarship/user', proxyController.verifyToken, proxyController.proxy('/scholarship/user'));
 
-app.get('/scholarship/user/new',proxyController.verifyToken, proxyController.proxy('/scholarship/user/new'));
+app.get('/scholarship/user/new', proxyController.verifyToken, proxyController.proxy('/scholarship/user/new'));
 
 app.get('/scholarship/user/amount', proxyController.verifyToken, proxyController.proxy('/scholarship/user/amount'));
 
@@ -112,8 +183,7 @@ app.use('/user/all', proxyController.proxy('/user/all'));
 
 
 // -------------------Notification------------------------------//
-// const interval = 10*1000;
-// setInterval(notificationController.sendPushNotification, interval);
+
 
 
 
