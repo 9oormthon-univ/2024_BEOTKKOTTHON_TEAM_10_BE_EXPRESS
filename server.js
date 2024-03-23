@@ -83,6 +83,7 @@ app.post('/scholarship/generate', scholarshipController.createScholarshipApi);
 
 app.get('/calendar/:year/:month', proxyController.verifyToken,calenderController.yearDateCalendarApi);
 app.get('/calendar/:year/:month/:day', proxyController.verifyToken, calenderController.yearDateDayCalendarApi);
+app.get('/calendar/end/:year/:month', proxyController.verifyToken, calenderController.countDayCalendarApi);
 
 
 // -------------------Proxy------------------------------//
