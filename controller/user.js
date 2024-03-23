@@ -222,6 +222,47 @@ const hashtagApi = (req, res) => {
   })
 }
 
+const userDeviceToken = (req, res) => {
+  userid = req.headers.userid;
+  devicetoken = req.body.devicetoken;
+
+  console.log(devicetoken);
+
+  models.Userdevice.findOne({
+    where: {
+      userid : userid
+    }
+  })
+  .then(findOneData => {
+    if(findOneData){
+      models.Userdevice.update({devicetoken : devicetoken},{
+        where: {
+          userid : userid
+        }
+      })
+      .then(numRows => {
+        if(numRows[0] == 1){
+          return res.json({message : "success"}); //디바이스토큰 저장 완료
+        } else {
+          return res.status(404).json({message : "same token"}); //디바이스토큰 저장 실패(토큰 같음)
+        }
+      })
+    } else {
+      models.Userdevice.create({
+        userid : userid,
+        devicetoken : devicetoken
+      })
+      .then(token => {
+        if(token){
+          return res.json({message : "success"}); //디바이스 토큰 저장
+        } else {
+          return  res.status(404).json({message : "fail"}); //디바이스 토큰 저장 실패
+        }
+      })
+    }
+  })
+} 
+
 module.exports = {
   loginApi,
   testApi,
@@ -230,5 +271,6 @@ module.exports = {
   checkOnboardApi,
   checkLoginApi,
   hashtagApi,
-  changePasswordApi
+  changePasswordApi,
+  userDeviceToken
 }

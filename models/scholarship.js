@@ -34,7 +34,8 @@ module.exports = (sequelize, DataTypes) => {
     description3: DataTypes.STRING,
     description4: DataTypes.STRING,
     support_target2: DataTypes.STRING,
-    support_target3: DataTypes.STRING
+    support_target3: DataTypes.STRING,
+    status: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Scholarship',
