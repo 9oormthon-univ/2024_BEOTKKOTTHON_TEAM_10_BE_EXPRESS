@@ -60,17 +60,17 @@ const changePasswordApi = (req, res) => {
       name: req.body.name
     }
   })
-  .then(foundData => {
-    if(foundData){
-      const password = req.body.password;
-          const saltRounds = 10;
-          bcrypt.hash(password, saltRounds, function (err, hashed_password) {
-            models.User.update({password: hashed_password}, {
-              where: {
-                userid : req.body.userid,
-                name : req.body.name
-              }
-            })
+    .then(foundData => {
+      if (foundData) {
+        const password = req.body.password;
+        const saltRounds = 10;
+        bcrypt.hash(password, saltRounds, function (err, hashed_password) {
+          models.User.update({ password: hashed_password }, {
+            where: {
+              userid: req.body.userid,
+              name: req.body.name
+            }
+          })
             .then(numRows => {
               if (numRows[0] === 1) {
                 return res.json({ message: "success" });
@@ -82,15 +82,15 @@ const changePasswordApi = (req, res) => {
               console.error('업데이트 중 오류 발생:', err);
               return res.status(500).json({ error: "Internal server error" });
             });
-          })
-    } else {
-      return res.status(200).json({message: "no user"});
-    }
-  })
-  .catch(err => {
-    console.error('사용자 검색 중 오류 발생:', err);
-    return res.status(500).json({ error: "Internal server error" });
-  });
+        })
+      } else {
+        return res.status(200).json({ message: "no user" });
+      }
+    })
+    .catch(err => {
+      console.error('사용자 검색 중 오류 발생:', err);
+      return res.status(500).json({ error: "Internal server error" });
+    });
 }
 
 
@@ -153,28 +153,27 @@ const onboardApi = (req, res) => {
   })
     .then(foundData => {
       if (foundData) {
-        if (foundData.onboard) {
-          return res.status(201).json({ message: "exist" });
-        } else {
-          foundData.update({
-            ranking: req.body.ranking,
-            grade: req.body.grade,
-            region_city_province: req.body.region_city_province,
-            region_city_country_district: req.body.region_city_country_district,
-            major: req.body.major,
-            onboard: true
+        foundData.update({
+          ranking: req.body.ranking,
+          grade: req.body.grade,
+          region_city_province: req.body.region_city_province,
+          region_city_country_district: req.body.region_city_country_district,
+          major: req.body.major,
+          onboard: true
+        })
+          .then(updatedData => {
+            return res.status(200).json({ message: "success" });
           })
-            .then(updatedData => {
-              return res.status(200).json({ message: "success" });
-            })
-            .catch(error => {
-              return res.status(404).json({ message: "fail2" }); //온보딩 실패
-            })
-        }
+          .catch(error => {
+            return res.status(404).json({ message: "fail2" }); //온보딩 실패
+          })
+
       } else {
         return res.status(400).json({ message: "fail1" }); //유저 없음
       }
     })
+
+
 }
 
 const checkOnboardApi = (req, res) => {
@@ -197,29 +196,29 @@ const checkOnboardApi = (req, res) => {
 }
 
 const checkLoginApi = (req, res) => {
-  return res.json({message: "login"});
+  return res.json({ message: "login" });
 }
 
 const hashtagApi = (req, res) => {
   models.User.findOne({
     where: {
-      userid : req.headers.userid
+      userid: req.headers.userid
     }
   })
-  .then(foundData => {
-    if(foundData){
-      const data = {
-        ranking : foundData.ranking,
-        grade : foundData.grade,
-        region_city_province : foundData.region_city_province,
-        region_city_country_district : foundData.region_city_country_district,
-        major : foundData.major
+    .then(foundData => {
+      if (foundData) {
+        const data = {
+          ranking: foundData.ranking,
+          grade: foundData.grade,
+          region_city_province: foundData.region_city_province,
+          region_city_country_district: foundData.region_city_country_district,
+          major: foundData.major
+        }
+        return res.json(data);
+      } else {
+        return res.json({ message: "fail" });
       }
-      return res.json(data);
-    } else {
-      return res.json({message : "fail"});
-    }
-  })
+    })
 }
 
 const userDeviceToken = (req, res) => {
@@ -230,38 +229,38 @@ const userDeviceToken = (req, res) => {
 
   models.Userdevice.findOne({
     where: {
-      userid : userid
+      userid: userid
     }
   })
-  .then(findOneData => {
-    if(findOneData){
-      models.Userdevice.update({devicetoken : devicetoken},{
-        where: {
-          userid : userid
-        }
-      })
-      .then(numRows => {
-        if(numRows[0] == 1){
-          return res.json({message : "success"}); //디바이스토큰 저장 완료
-        } else {
-          return res.status(404).json({message : "same token"}); //디바이스토큰 저장 실패(토큰 같음)
-        }
-      })
-    } else {
-      models.Userdevice.create({
-        userid : userid,
-        devicetoken : devicetoken
-      })
-      .then(token => {
-        if(token){
-          return res.json({message : "success"}); //디바이스 토큰 저장
-        } else {
-          return  res.status(404).json({message : "fail"}); //디바이스 토큰 저장 실패
-        }
-      })
-    }
-  })
-} 
+    .then(findOneData => {
+      if (findOneData) {
+        models.Userdevice.update({ devicetoken: devicetoken }, {
+          where: {
+            userid: userid
+          }
+        })
+          .then(numRows => {
+            if (numRows[0] == 1) {
+              return res.json({ message: "success" }); //디바이스토큰 저장 완료
+            } else {
+              return res.status(404).json({ message: "same token" }); //디바이스토큰 저장 실패(토큰 같음)
+            }
+          })
+      } else {
+        models.Userdevice.create({
+          userid: userid,
+          devicetoken: devicetoken
+        })
+          .then(token => {
+            if (token) {
+              return res.json({ message: "success" }); //디바이스 토큰 저장
+            } else {
+              return res.status(404).json({ message: "fail" }); //디바이스 토큰 저장 실패
+            }
+          })
+      }
+    })
+}
 
 module.exports = {
   loginApi,
