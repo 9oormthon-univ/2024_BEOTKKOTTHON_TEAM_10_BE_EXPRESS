@@ -51,7 +51,7 @@ const apnProvider = new apn.Provider({
         keyId: 'N7R2AY8J7S',
         teamId: 'Q653PU93R6',
     },
-    production: false // 개발용인지 아닌지 설정
+    production: true // 개발용인지 아닌지 설정
 });
 
 function sendPushNotification() {
